@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>AutoWireStripper User Interface</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Automatic Wire Cutter</h1>
+
+        <div>
+            <label for="left_strip_length">Left Strip Length</label><br>
+            <input id="left_strip_length" type="number">
+        </div>
+        <div>
+            <label for="wire_length">Wire Length</label><br>
+            <input id="wire_length" type="number">
+        </div>
+        <div>
+            <label for="right_strip_length">Right Strip Length</label><br>
+            <input id="right_strip_length" type="number">
+        </div>
+        <div>
+            <label for="wire_quanity">Wire Quantity</label><br>
+            <input id="wire_quantity" type="number">
+        </div>
+        <div>
+            <label for="strip_depth">Strip Depth</label><br>
+            <input id="strip_depth" type="number">
+        </div>
+    
+        <button onclick="onSubmit()">Submit</button>
+    </div>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="main.js"></script>
+</body>
+</html>
