@@ -11,28 +11,40 @@ const wireQuantity = document.getElementById("wire_quantity");
 const stripDepth = document.getElementById("strip_depth");
 const submitButton = document.getElementById("left_strip_length");
 
-const LIN_MOT_ONE = "stepper.00";
-const LIN_MOT_TWO = "stepper.01";
-const EXTRUDER_STEPPER = "stepper.02";
+const LIN_MOT_ONE = "stepper.00"; // rywb4-rwyb6
+const LIN_MOT_TWO = "stepper.01"; // bwyr4-rwyb6
+const EXTRUDER_STEPPER = "stepper.02"; // rywb4-rwyb6
 
-// To Be Definted
+// To Be Defined
 const WIRE_Y_POSITION = 0;
-const LIN_MOT_STEP_DIST = 0;
-const EXTRUDER_STEP_DIST = 0
+const LIN_MOT_STEP_DIST = 1;
+const EXTRUDER_STEP_DIST = 1;
 
 let recordedCurrentPosition = 0;
 let commandArray = [];
 
 
-function moveTopBlade(distance) {
+function runSerialCommand(command) {
+    if (typeof command == "object") {
+        command = commandArrayToString(command);
+    }
+
+    client.publish(
+        "hextech/hextech-justin/commands",
+        command
+    );
+}
+
+
+function moveTopBlade(distance) { // Positive for Up, Negative for Down
     dist = LIN_MOT_STEP_DIST * distance;
-    command = `${LIN_MOT_ONE}_move_${distance};${LIN_MOT_TWO}_move_${dist}`
+    command = `${LIN_MOT_ONE}_move_${distance*-1};${LIN_MOT_TWO}_move_${dist}`
     commandArray.push(command);
     return command;
 }
 
 
-function moveWire(distance) {
+function moveWire(distance) { // Positive for Backward, Negative for Forward
     dist = EXTRUDER_STEP_DIST * distance;
     command = `${EXTRUDER_STEPPER}_move_${dist}`;
     commandArray.push(command);
@@ -46,7 +58,7 @@ function evaluateCommand() {
 
     for (let i = 0; i < wireQuantity.value; i++) {
         // Left Strip
-        moveWire(leftStripLength.value);
+        moveWire(-leftStripLength.value);
         moveTopBlade((WIRE_Y_POSITION - recordedCurrentPosition) + stripDepth.value); // To Stripping Depth
 
         // Cut
@@ -80,8 +92,5 @@ function onSubmit() {
     evaluateCommand();
     command = commandArrayToString();
 
-    client.publish(
-        "hextech/hextech-justin/commands",
-        "led.bl_off" //command
-    );
+    runSerialCommand(command);
 }
