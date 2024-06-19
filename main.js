@@ -13,7 +13,7 @@ const submitButton = document.getElementById("left_strip_length");
 
 const LIN_MOT_ONE = "stepper.00"; // rywb4-rwyb6
 const LIN_MOT_TWO = "stepper.01"; // bwyr4-rwyb6
-const EXTRUDER_STEPPER = "stepper.02"; // rywb4-rwyb6
+const EXTRUDER_STEPPER = "stepper.02"; // rywb4-rywb6
 
 // To Be Defined
 const WIRE_Y_POSITION = 0;
@@ -30,7 +30,7 @@ function emergencyStop() {
 }
 
 function initializeCurrent() {
-    runSerialCommand("stepper.00_rms_600;stepper.01_rms_600;stepper.02_rms_300");
+    runSerialCommand("stepper.00_rms_600;stepper.01_rms_600;stepper.02_rms_200");
 }
 
 
@@ -82,14 +82,17 @@ function moveTopBlade(distance) { // Positive for Up, Negative for Down
     commandArray.push(command);
     bladeHistory.push(distance);
 
+    //runSerialCommand(command);
     return command;
 }
 
 
 function moveWire(distance) { // Positive for Forward, Negative for Backward
-    dist = EXTRUDER_STEP_DIST * distance
+    dist = EXTRUDER_STEP_DIST * distance;
     command = `${EXTRUDER_STEPPER}_move_${dist}`;
     commandArray.push(command);
+
+    //runSerialCommand(command);
     return command;
 }
 
@@ -114,11 +117,20 @@ function testSequence() {
 }
 
 
-function runSequence() {
+function runProgram() {
     commandArray = [];
 
-    moveWire(1000);
+    moveWire(parseInt(leftStripLength.value));
     stripWire();
+    moveTopBlade(2000);
+
+    moveWire(parseInt(wireLength.value));
+    stripWire();
+    moveTopBlade(2000);
+
+    moveWire(parseInt(rightStripLength.value));
+    commandArrayToString.push("stepper.00_move_-5");
+    cutWire();
     moveTopBlade(1000);
 
     runSerialCommand(commandArray);
@@ -127,9 +139,9 @@ function runSequence() {
 
 function onSubmit() {
     console.log("Submit Button Clicked");
-    runSequence();
+    runProgram();
 
-    console.log("Finished");
+    console.log("Moving...");
 }
 
 // Brings Top Blade to "home" position when page is closed or refreshed

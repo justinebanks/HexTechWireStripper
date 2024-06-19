@@ -1,49 +1,33 @@
 import time
 import paho.mqtt.client as mqtt
 
-USERNAME = "hextech-justin"
-PASSWORD = "justin"
-TOPIC = "hextech/hextech-justin/commands"
-COMMANDS = ["led.wh_off", "led.bl_off"]
-
-
 def on_publish(client, userdata, mid, reason_code, properties):
-    try:
-        print("Published")
-        userdata.remove(mid)
-    except KeyError:
-        print("Got Key Error?")
-
-
-def on_connect(client, userdata, flags, reason_code, properties):
-    print("Connected")
-    client.subscribe("$SYS/#")
+    print("Published")
 
 
 unacked_publish = set()
-
 mqttc = mqtt.Client(mqtt.CallbackAPIVersion.VERSION2)
 mqttc.on_publish = on_publish
-mqttc.on_connect = on_connect
 
 mqttc.user_data_set(unacked_publish)
-mqttc.username_pw_set(username=USERNAME,password=PASSWORD)
+mqttc.username_pw_set(username="hextech-justin",password="justin")
 mqttc.connect("mqtt.hextronics.cloud", 1883)
 mqttc.loop_start()
 
-for command in COMMANDS:
-    # Our application produce some messages
-    msg_info = mqttc.publish(TOPIC, command)
-    unacked_publish.add(msg_info.mid)
+# Our application produce some messages
+msg_info = mqttc.publish("hextech/hextech-justin/commands", "led.bl_on", qos=1)
+unacked_publish.add(msg_info.mid)
 
-    # Safe way to wait for all publishes
-    msg_info.wait_for_publish()
-
+msg_info2 = mqttc.publish("hextech/hextech-justin/commands", "led.wh_on", qos=1)
+unacked_publish.add(msg_info2.mid)
 
 # Wait for all message to be published
 while len(unacked_publish):
     time.sleep(0.1)
 
+# Due to race-condition described above, the following way to wait for all publish is safer
+msg_info.wait_for_publish()
+msg_info2.wait_for_publish()
 
 mqttc.disconnect()
 mqttc.loop_stop()
