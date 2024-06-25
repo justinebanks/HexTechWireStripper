@@ -36,11 +36,11 @@ public class App extends JFrame implements ActionListener {
     JButton submitButton = new JButton("Submit");
 
     JTextField inputBox = new JTextField();
-    JTextField leftStripLength = new JTextField();
-    JTextField wireLength = new JTextField();
-    JTextField rightStripLength = new JTextField();
-    JTextField stripDepth = new JTextField();
-    JTextField wireQuantity = new JTextField();
+    JTextField leftStripLength = new JTextField("1000");
+    JTextField wireLength = new JTextField("2000");
+    JTextField rightStripLength = new JTextField("1000");
+    JTextField stripDepth = new JTextField("150");
+    JTextField wireQuantity = new JTextField("1");
 
     JLabel lslLabel = new JLabel("Left Strip Length:");
     JLabel wlLabel = new JLabel("Wire Length:");
@@ -50,10 +50,11 @@ public class App extends JFrame implements ActionListener {
 
     public static void main(String[] args) {
         App app = new App();
-        String message = app.moveTopBlade(-7000);
+        String message = "bldc.00_move_5000";
 
         app.initializeCurrent();
         app.mqtt.publishMessage(app.mqttTopic, message);
+        //app.runProgram();
     }
 
 
@@ -212,21 +213,50 @@ public class App extends JFrame implements ActionListener {
     }
 
 
+    // Segments the full command into 3 parts and runs them separately with a 
     public void runProgram() {
         commandArray.clear();
-    
         moveWire(Integer.parseInt(leftStripLength.getText()));
         stripWire();
         moveTopBlade(2000);
-    
+        mqtt.publishMessage(mqttTopic, commandArrayToString());
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+        
+        commandArray.clear();
         moveWire(Integer.parseInt(wireLength.getText()));
         stripWire();
         moveTopBlade(2000);
+        mqtt.publishMessage(mqttTopic, commandArrayToString());
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
     
+        commandArray.clear();
         moveWire(Integer.parseInt(rightStripLength.getText()));
         cutWire();
         moveTopBlade(1000);
-    
         mqtt.publishMessage(mqttTopic, commandArrayToString());
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        }
+        catch (InterruptedException e) {
+            System.out.println(e.getMessage());
+        }
+
+        commandArray.clear();
+        moveTopBlade(6000);
+        mqtt.publishMessage(mqttTopic, commandArrayToString());
+
     }
 }

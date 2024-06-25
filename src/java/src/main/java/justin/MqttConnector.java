@@ -13,10 +13,8 @@ public class MqttConnector
     public String username;
     public String password;
 
-    public static void main( String[] args )
-    {
-        MqttConnector mc = new MqttConnector("ws://mqtt.hextronics.cloud:8083/mqtt", "hextech-alex", "alex");
-        mc.publishMessage("hextech/hextech-alex/commands", "P_mos.01_off;P_stepper.00_stop;P_stepper.01_stop;P_stepper.02_stop;P_stepper.03_stop");
+    public static void main( String[] args ) {
+        new MqttTester();
     }
 
     public MqttConnector(String broker, String username, String password) {
