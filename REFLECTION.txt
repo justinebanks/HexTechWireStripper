@@ -1,5 +1,12 @@
 Small summary of what you learned with the project and if HexTech was helpful or not
 
-This project was my intro into engineering. Up until now, I've been exclusively on the programming side, but this project taught me the basics of the engineering side of things. The making of this project facilitated my movement from high-level programming to more hardware-related things. I still used high-level languages like Java, but using the knowledge I gained from learning how circuit boards work, I was able to learn other lower-level languages like C and understand how they're used to interact with the microcontrollers on circuit boards like the HexTech. 
+This project was my intro into engineering. Up until now, I've been exclusively on the programming side, but this project
+taught me the basics of the engineering side of things. The making of this project facilitated my movement from high-level
+programming to more hardware-related things. I still used high-level languages like Java, but using the knowledge I gained
+from learning how circuit boards work, I was able to learn other lower-level languages like C and understand how they're 
+used to interact with the microcontrollers on circuit boards like the HexTech. 
 
-The HexTech board was very useful in the fact that it abstracted the C programming for the firmware of the board and replaced it with a very easy-to-use system of commands that specify what to do with each IO pin. That abstraction of the complexity allowed me to easily program the front-end user interface and let the HexTech handle the rest. Now that I've learned the basic workflow of an electromechanical project, I can apply my new knowledge to future projects to make them even better. 
+The HexTech board was very useful in the fact that it abstracted the C programming for the firmware of the board and replaced 
+it with a very easy-to-use system of commands that specify what to do with each IO pin. That abstraction of the complexity 
+allowed me to easily program the front-end user interface and let the HexTech handle the rest. Now that I've learned the basic 
+workflow of an electromechanical project, I can apply my new knowledge to future projects to make them even better. 
